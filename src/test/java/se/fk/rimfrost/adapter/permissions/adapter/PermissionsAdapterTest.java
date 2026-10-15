@@ -50,7 +50,8 @@ public class PermissionsAdapterTest
    @DisplayName("PERM-FR-01.1: hasSidPermission returns true when service responds with true")
    void testHasSidPermissionReturnsTrue() throws PermissionsException
    {
-      server.stubFor(WireMock.get(WireMock.urlPathEqualTo("/KORTNUMMER/123456789/hasSidPermission"))
+      server.stubFor(WireMock.post(WireMock.urlPathEqualTo("/hasSidPermission"))
+            .withRequestBody(WireMock.equalTo("{\"idTyp\":\"KORTNUMMER\",\"idVarde\":\"123456789\"}"))
             .willReturn(WireMock.aResponse().withStatus(200)
                   .withHeader("Content-Type", "application/json")
                   .withBody("true")));
@@ -64,7 +65,8 @@ public class PermissionsAdapterTest
    @DisplayName("PERM-FR-01.2: hasSidPermission returns false when service responds with false")
    void testHasSidPermissionReturnsFalse() throws PermissionsException
    {
-      server.stubFor(WireMock.get(WireMock.urlPathEqualTo("/KORTNUMMER/123456789/hasSidPermission"))
+      server.stubFor(WireMock.post(WireMock.urlPathEqualTo("/hasSidPermission"))
+            .withRequestBody(WireMock.equalTo("{\"idTyp\":\"KORTNUMMER\",\"idVarde\":\"123456789\"}"))
             .willReturn(WireMock.aResponse().withStatus(200)
                   .withHeader("Content-Type", "application/json")
                   .withBody("false")));
@@ -78,7 +80,8 @@ public class PermissionsAdapterTest
    @DisplayName("PERM-FR-01.3: hasSidPermission throws PermissionsException with NOT_FOUND when service responds with 404")
    void testHasSidPermissionThrowsNotFound()
    {
-      server.stubFor(WireMock.get(WireMock.urlPathEqualTo("/KORTNUMMER/unknown/hasSidPermission"))
+      server.stubFor(WireMock.post(WireMock.urlPathEqualTo("/hasSidPermission"))
+            .withRequestBody(WireMock.equalTo("{\"idTyp\":\"KORTNUMMER\",\"idVarde\":\"unknown\"}"))
             .willReturn(WireMock.aResponse().withStatus(404)));
 
       var ex = assertThrows(PermissionsException.class, () -> permissionsAdapter.hasSidPermission("KORTNUMMER", "unknown"));
@@ -89,7 +92,8 @@ public class PermissionsAdapterTest
    @DisplayName("PERM-FR-01.4: hasSidPermission throws PermissionsException with BAD_REQUEST when service responds with 400")
    void testHasSidPermissionThrowsBadRequest()
    {
-      server.stubFor(WireMock.get(WireMock.urlPathEqualTo("/OGILTIG/123456789/hasSidPermission"))
+      server.stubFor(WireMock.post(WireMock.urlPathEqualTo("/hasSidPermission"))
+            .withRequestBody(WireMock.equalTo("{\"idTyp\":\"OGILTIG\",\"idVarde\":\"123456789\"}"))
             .willReturn(WireMock.aResponse().withStatus(400)));
 
       var ex = assertThrows(PermissionsException.class, () -> permissionsAdapter.hasSidPermission("OGILTIG", "123456789"));
@@ -100,7 +104,8 @@ public class PermissionsAdapterTest
    @DisplayName("PERM-FR-01.5: hasSidPermission throws PermissionsException with SERVICE_UNAVAILABLE when service responds with 503")
    void testHasSidPermissionThrowsServiceUnavailable()
    {
-      server.stubFor(WireMock.get(WireMock.urlPathEqualTo("/KORTNUMMER/123456789/hasSidPermission"))
+      server.stubFor(WireMock.post(WireMock.urlPathEqualTo("/hasSidPermission"))
+            .withRequestBody(WireMock.equalTo("{\"idTyp\":\"KORTNUMMER\",\"idVarde\":\"123456789\"}"))
             .willReturn(WireMock.aResponse().withStatus(503)));
 
       var ex = assertThrows(PermissionsException.class, () -> permissionsAdapter.hasSidPermission("KORTNUMMER", "123456789"));
@@ -111,7 +116,8 @@ public class PermissionsAdapterTest
    @DisplayName("PERM-FR-01.6: hasSidPermission throws PermissionsException with UNEXPECTED_ERROR when service responds with 500")
    void testHasSidPermissionThrowsUnexpectedError()
    {
-      server.stubFor(WireMock.get(WireMock.urlPathEqualTo("/KORTNUMMER/123456789/hasSidPermission"))
+      server.stubFor(WireMock.post(WireMock.urlPathEqualTo("/hasSidPermission"))
+            .withRequestBody(WireMock.equalTo("{\"idTyp\":\"KORTNUMMER\",\"idVarde\":\"123456789\"}"))
             .willReturn(WireMock.aResponse().withStatus(500)));
 
       var ex = assertThrows(PermissionsException.class, () -> permissionsAdapter.hasSidPermission("KORTNUMMER", "123456789"));

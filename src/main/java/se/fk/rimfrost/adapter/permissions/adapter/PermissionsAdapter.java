@@ -17,6 +17,7 @@ import org.glassfish.jersey.client.proxy.WebResourceFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.fk.rimfrost.permissions.jaxrsspec.controllers.generatedsource.PermissionControllerApi;
+import se.fk.rimfrost.permissions.jaxrsspec.controllers.generatedsource.model.SidPermissionRequest;
 
 /**
  * HTTP adapter for the permissions API, using the Jersey proxy client pattern.
@@ -74,7 +75,8 @@ public class PermissionsAdapter
    {
       try
       {
-         return permissionsClient.hasSidPermission(idTyp, idVarde);
+         var request = new SidPermissionRequest(idTyp, idVarde);
+         return permissionsClient.hasSidPermission(request);
       }
       catch (NotFoundException ex)
       {
