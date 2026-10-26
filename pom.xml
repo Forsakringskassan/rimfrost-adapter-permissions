@@ -49,7 +49,7 @@
     <dependency>
       <groupId>se.fk.rimfrost.permissions</groupId>
       <artifactId>rimfrost-service-permissions-openapi-jaxrs-spec</artifactId>
-      <version>0.0.4</version>
+      <version>0.0.1</version>
     </dependency>
     <dependency>
       <groupId>org.glassfish.jersey.connectors</groupId>
