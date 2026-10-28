@@ -2,6 +2,12 @@
 
 Changelog of rimfrost-adapter-permissions.
 
+## 0.0.2 (2026-10-28)
+
+### Bug Fixes
+
+-  consolidate CI and release workflows to use shared reusable workflows ([24b0a](https://github.com/Forsakringskassan/rimfrost-adapter-permissions/commit/24b0a7a448e817c) Ulf Slunga)  
+
 ## 0.0.1 (2026-10-26)
 
 ### Bug Fixes
