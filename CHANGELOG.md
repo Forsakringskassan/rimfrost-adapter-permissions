@@ -2,6 +2,15 @@
 
 Changelog of rimfrost-adapter-permissions.
 
+## 0.0.3 (2026-10-29)
+
+### Bug Fixes
+
+-  Bump release version ([72624](https://github.com/Forsakringskassan/rimfrost-adapter-permissions/commit/72624fe8540d01b) Lars Persson)  
+
+### Dependency updates
+
+- add renovate.json ([34028](https://github.com/Forsakringskassan/rimfrost-adapter-permissions/commit/340289ad7683a2b) renovate[bot])  
 ## 0.0.2 (2026-10-28)
 
 ### Bug Fixes
