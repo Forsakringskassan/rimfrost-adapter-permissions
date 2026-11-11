@@ -9,10 +9,10 @@ import jakarta.ws.rs.ProcessingException;
 import jakarta.ws.rs.ServiceUnavailableException;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.client.Client;
-import jakarta.ws.rs.client.ClientBuilder;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.glassfish.jersey.apache5.connector.Apache5ConnectorProvider;
 import org.glassfish.jersey.client.ClientConfig;
+import org.glassfish.jersey.client.JerseyClientBuilder;
 import org.glassfish.jersey.client.proxy.WebResourceFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,7 +44,8 @@ public class PermissionsAdapter
    {
       ClientConfig clientConfig = new ClientConfig();
       clientConfig.connectorProvider(new Apache5ConnectorProvider());
-      this.client = ClientBuilder.newClient(clientConfig);
+      clientConfig.register(AdapterObjectMapperProvider.class);
+      this.client = JerseyClientBuilder.newClient(clientConfig);
       this.permissionsClient = WebResourceFactory.newResource(PermissionControllerApi.class,
             client.target(this.permissionsBaseUrl));
    }
@@ -78,30 +79,42 @@ public class PermissionsAdapter
          var request = new SidPermissionRequest(idTyp, idVarde);
          return permissionsClient.hasSidPermission(request);
       }
-      catch (NotFoundException ex)
-      {
-         var message = "User not found for idTyp=" + idTyp + ", idVarde=" + idVarde;
-         LOGGER.error(message, ex);
-         throw new PermissionsException(PermissionsException.ErrorType.NOT_FOUND, message, ex);
-      }
-      catch (BadRequestException ex)
-      {
-         var message = "Bad request when checking SID permission for idTyp=" + idTyp + ", idVarde=" + idVarde;
-         LOGGER.error(message, ex);
-         throw new PermissionsException(PermissionsException.ErrorType.BAD_REQUEST, message, ex);
-      }
-      catch (ServiceUnavailableException ex)
-      {
-         var message = "Permissions service unavailable";
-         LOGGER.error(message, ex);
-         throw new PermissionsException(PermissionsException.ErrorType.SERVICE_UNAVAILABLE, message, ex);
-      }
-      catch (ProcessingException | WebApplicationException ex)
+      catch (ProcessingException ex)
       {
          var message = "Unexpected error when checking SID permission for idTyp=" + idTyp + ", idVarde=" + idVarde;
          LOGGER.error(message, ex);
          throw new PermissionsException(PermissionsException.ErrorType.UNEXPECTED_ERROR, message, ex);
       }
+      catch (WebApplicationException ex)
+      {
+         throw toPermissionsException(ex, idTyp, idVarde);
+      }
    }
 
+   private PermissionsException toPermissionsException(WebApplicationException ex, String idTyp, String idVarde)
+   {
+      return switch (ex.getResponse().getStatus())
+      {
+         case 404 -> {
+            var message = "User not found for idTyp=" + idTyp + ", idVarde=" + idVarde;
+            LOGGER.error(message, ex);
+            yield new PermissionsException(PermissionsException.ErrorType.NOT_FOUND, message, ex);
+         }
+         case 400 -> {
+            var message = "Bad request when checking SID permission for idTyp=" + idTyp + ", idVarde=" + idVarde;
+            LOGGER.error(message, ex);
+            yield new PermissionsException(PermissionsException.ErrorType.BAD_REQUEST, message, ex);
+         }
+         case 503 -> {
+            var message = "Permissions service unavailable";
+            LOGGER.error(message, ex);
+            yield new PermissionsException(PermissionsException.ErrorType.SERVICE_UNAVAILABLE, message, ex);
+         }
+         default -> {
+            var message = "Unexpected error when checking SID permission for idTyp=" + idTyp + ", idVarde=" + idVarde;
+            LOGGER.error(message, ex);
+            yield new PermissionsException(PermissionsException.ErrorType.UNEXPECTED_ERROR, message, ex);
+         }
+      };
+   }
 }
