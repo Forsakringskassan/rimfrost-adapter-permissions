@@ -2,6 +2,16 @@
 
 Changelog of rimfrost-adapter-permissions.
 
+## 0.0.4 (2026-11-11)
+
+### Bug Fixes
+
+-  Add support for ignoring unknown json properties ([ee70a](https://github.com/Forsakringskassan/rimfrost-adapter-permissions/commit/ee70adcd1aa57bf) Lars Persson)  
+-  **deps**  update dependency se.fk.rimfrost.permissions:rimfrost-service-permissions-openapi-jaxrs-spec to v0.0.2 ([23368](https://github.com/Forsakringskassan/rimfrost-adapter-permissions/commit/233684400f7d863) renovate[bot])  
+
+### Dependency updates
+
+- update forsakringskassan/.github digest to cbc0db8 ([a0646](https://github.com/Forsakringskassan/rimfrost-adapter-permissions/commit/a064615500c698c) renovate[bot])  
 ## 0.0.3 (2026-10-29)
 
 ### Bug Fixes
